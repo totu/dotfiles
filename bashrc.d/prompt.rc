@@ -1,0 +1,28 @@
+## Promp stuff
+# ~/a/b/c/d/e/folder
+
+__short_path() {
+    p="${PWD#${HOME}}"; [ "${PWD}" != "${p}" ] && printf "~";IFS=/; for q in ${p:1}; do printf "/%s" "${q:0:1}"; done; printf -- "${q:1} "
+}
+
+# HH:MM time prompt
+__time() {
+    t="$(date +%H:%M)"
+    printf "%s" "${t}"
+}
+
+__oma_git() {
+    str=`__git_ps1`
+    echo -e "$str"
+}
+
+__onnistu() {
+    if [ "$TOP1_SUCC" -ne 0 ]; then
+        printf "\e[38;5;160m%s\e[0m" "$TOP1_SUCC"
+    fi
+
+}
+
+# The one and only...
+export PS1='\n\[\[\e[38;5;64m\[`__short_path`\]\e[0m\[`__oma_git`\]\]\] \[`__onnistu`\]\n$ '
+#export PROMPT_COMMAND='__foo_cd'

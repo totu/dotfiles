@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+# Git stuff
+export GIT_PS1_SHOWDIRTYSTATE="1"
+export GIT_PS1_SHOWCOLORHINTS=true
+export GIT_PS1_SHOWUPSTREAM=verbose
+source ~/.scripts/git-prompt.sh
+
+#git
+if [ -f ~/.scripts/git-completion.bash ]; then
+    . ~/.scripts/git-completion.bash
+    __git_complete g __git_main
+fi
+
