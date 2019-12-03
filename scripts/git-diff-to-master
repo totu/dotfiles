@@ -1,0 +1,2 @@
+#!/bin/bash
+git diff --stat master |tail -n1 |awk -F',' '{printf $0"\n total changes: "$2+$3}'

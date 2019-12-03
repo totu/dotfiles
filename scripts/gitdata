@@ -1,0 +1,23 @@
+#!/bin/bash -e
+#
+# Show data from current commit
+# If an argument is given, show data from the arg dir
+
+if [ -n "$1" ]; then
+    cd "$1"
+fi
+
+echo ""
+echo -n "git: "; basename "$(git rev-parse --show-toplevel)"
+git log -1 --format=\
+'git: ============================================================%n'\
+'git: ========= %H =========%n'\
+'git: ============================================================%n'
+
+git cat-file commit HEAD
+echo ""
+
+if [ -n "$1" ]; then
+    cd - > /dev/null
+fi
+

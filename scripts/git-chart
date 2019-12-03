@@ -1,0 +1,6 @@
+#!/bin/bash
+rm /tmp/chart
+for ((d=1; d<=$1; d++)); do
+   echo $((100-$(git log --before="$d day ago" -n 100 --format='%s' | grep 'squash\|fixup\|\.$\|.\{50\}' -c))) >> /tmp/chart
+done
+chart.py $(cat /tmp/chart)

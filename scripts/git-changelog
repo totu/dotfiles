@@ -1,0 +1,4 @@
+#!/bin/bash
+
+TAG=$(git describe --abbrev=0)
+git shortlog --no-merges $TAG..HEAD

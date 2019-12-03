@@ -1,0 +1,76 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+
+import argparse
+from subprocess import Popen, PIPE
+
+def get_args():
+    """parse cli arguments"""
+    parser = argparse.ArgumentParser()
+    parser.add_argument(
+        '-a',
+        '--author',
+        help='Author')
+    parser.add_argument(
+        '-n',
+        '--count',
+        type=int,
+        help='How many commits')
+    parser.add_argument(
+        '-r',
+        '--reverse',
+        action='store_true',
+        help='Bad commits')
+    args = parser.parse_args()
+    return args
+
+
+def execute_git_command(args):
+    """Execute git command with given arguments"""
+    git = "git log --format='%s'"
+
+    if args.author:
+        git += " --author={}".format(args.author)
+
+    if args.count:
+        git += " -n %d" % (args.count-1)
+
+    cmd = Popen(git.split(" "), stdout=PIPE)
+    output, _ = cmd.communicate()
+    return output.decode('utf-8').split("\n")
+
+def contains_bad_word(commit):
+    """Check if commit contains banned words"""
+    bad_words = ['!fixup', '!squash']
+    for word in bad_words:
+        if word in commit:
+            return True
+    return False
+
+
+def main():
+    """do the thing"""
+    args = get_args()
+    output = execute_git_command(args)
+
+    total_commit_count = len(output)
+    bad_commits = 0
+
+    for row in output:
+        if len(row) > 50 or row.endswith(".") or contains_bad_word(row):
+            bad_commits += 1
+
+    good_commits = total_commit_count - bad_commits
+
+    show_commits = good_commits
+    text = "good"
+    if args.reverse:
+        show_commits = bad_commits
+        text = "bad"
+
+    percentage = float(show_commits) / float(total_commit_count) * 100
+    print("{}/{} {} commits ({:.2f} %)".format(show_commits, total_commit_count, text, percentage))
+
+
+if __name__ == "__main__":
+    main()
