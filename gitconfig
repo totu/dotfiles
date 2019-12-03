@@ -1,0 +1,50 @@
+[user]
+	name = ""
+	email = ""
+[push]
+    default = simple
+[alias]
+    cp = cherry-pick
+    t = "!git checkout $(git describe)"
+    g = !exec git
+    git = !exec git
+    l = log --oneline
+	ds = diff --staged
+    st = status -sb
+    co = checkout
+    byname = shortlog -s -n
+    k = log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset'
+    b = for-each-ref --sort=-committerdate refs/remotes/ --format='%(HEAD) %(color:yellow)%(refname:short)%(color:reset) - %(color:red)%(objectname:short)%(color:reset) - %(contents:subject) - %(authorname) (%(color:green)%(committerdate:relative)%(color:reset))'
+	root = rev-parse --show-toplevel
+	ctags = !.git/hooks/ctags
+[commit]
+    verbose = true
+[log]
+    decorate = full
+[gc]
+    autodetach = 1
+	pruneexpire = 30 days
+[core]
+	editor = nvim
+	excludesfile = /home/topi/.gitignore_global
+[filter "lfs"]
+	clean = git-lfs clean %f
+	smudge = git-lfs smudge %f
+	required = true
+[rerere]
+	enabled = true
+[diff]
+	indentHeuristic = true
+	algorithm = patience
+    tool = icdiff
+    colorMoved = default
+[difftool]
+    prompt = false
+[difftool "icdiff"]
+    cmd = /usr/local/bin/icdiff --line-numbers $LOCAL $REMOTE
+[rebase]
+	autostash = true
+[help]
+	autocorrect = 1
+[init]
+	templatedir = ~/.git_template
