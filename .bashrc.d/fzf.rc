@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+#[ -f ~/.fzf.bash ] && source ~/.fzf.bash
+#export FZF_DEFAULT_COMMAND='ag -U -f -g ""'
+export FZF_DEFAULT_COMMAND='rg -L --files --no-ignore --hidden --follow -g "!*.pyc" -g "!{.git,node_modules}/*" 2> /dev/null'
+export FZF_ALT_C_COMMAND="cd ~/; bfs -type d -nohidden | sed s/^\./~/"
+export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
+

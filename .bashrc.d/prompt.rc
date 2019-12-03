@@ -1,0 +1,23 @@
+#!/bin/bash
+## Promp stuff
+# ~/a/b/c/d/e/folder
+
+__short_path() {
+    p="${PWD#${HOME}}"; [ "${PWD}" != "${p}" ] && printf "~";IFS=/; for q in ${p:1}; do printf "/%s" "${q:0:1}"; done; printf -- "${q:1} "
+}
+
+# HH:MM time prompt
+__time() {
+    t="$(date +%H:%M)"
+    printf "%s" "${t}"
+}
+
+__oma_git() {
+    str=`__git_ps1`
+    echo -e "$str"
+}
+
+
+# The one and only...
+export PS1='\n\[\[\e[38;5;64m\[`__short_path`\]\e[0m\[`__oma_git`\]\]\] \n$ '
+#export PROMPT_COMMAND='__foo_cd'
