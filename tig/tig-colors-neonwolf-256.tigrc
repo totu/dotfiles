@@ -1,0 +1,111 @@
+# Neonwolf Color Scheme for Tig
+#
+# Based mostly on the colors from the badwolf airline theme
+#
+# Github: https://github.com/h3xx/tig-colors-neonwolf
+#
+
+# disable importing colors from git config
+# (breaks main-ref coloring, probably others)
+set git-colors = no
+
+color header			121	235
+color section			39	235
+color search-result		black	81
+
+# diff view
+color diff-header		39	235
+color diff-index		81	235
+color diff-oldmode		81	235
+color diff-newmode		81	235
+color "rename from "		81	235
+color "rename to "		81	235
+color "similarity "		81	235
+color "dissimilarity "		81	235
+color diff-stat			222	235
+color diff-chunk		165	235
+color diff-add			154	235
+#color diff-add-highlight	232	154
+color diff-del			196	235
+#color diff-del-highlight	232	196
+color " +"			154	default
+color " -"			196	default
+color "--- "			39	235
+color "+++ "			39	235
+color "Merge: "			222	235
+color "Refs: "			222	235
+color "commit "			154	235
+color "Commit: "		39	235
+color "CommitDate: "		165	235
+color "Author: "		39	235
+color "AuthorDate: "		165	235
+color "Tagger: "		222	235
+color "TaggerDate: "		222	235
+color "---"			165	default
+
+# log view, mostly
+color "Date: "			165	235
+color "    Signed-off-by"	222	235
+color "    Acked-by"		222	235
+color "    Tested-by"		222	235
+color "    Reviewed-by"		222	235
+
+# main view
+color author			39	235
+color date			165	235
+color graph-commit		154	default
+color id			154	235
+color main-remote		222	235
+color main-tracked		222	235
+color main-tag			166	235
+color main-local-tag		166	235
+color main-head			81	235
+color main-ref			121	235
+color overflow			196	default
+
+# window dressing
+color title-blur		39	235
+color title-focus		39	232	 reverse
+color cursor			255	232
+color status			82	default
+
+# tree view
+color mode			121	default
+color directory			121	default
+color file			255	default
+
+# status view
+color stat-none			82	default
+color stat-staged		154	235
+color stat-unstaged		166	235
+color stat-untracked		81	235
+
+# lines in digraph
+color palette-0			165	default
+color palette-1			39	default
+color palette-2			222	default
+color palette-3			166	default
+color palette-4			121	default
+color palette-5			82	default
+color palette-6			196	default
+color palette-7			238	default
+# repeat
+color palette-8			165	default
+color palette-9			39	default
+color palette-10		222	default
+color palette-11		166	default
+color palette-12		121	default
+color palette-13		82	default
+
+# grep view
+color grep.file			39	235
+color grep.line-number		165	235
+color grep.delimiter		82	235	 # no effect?
+color delimiter			82	235	 # no effect?
+
+# help view
+color help-group		165	235
+color help-action		222	235
+
+# vi: ts=8 sts=8 sw=8 noet
+

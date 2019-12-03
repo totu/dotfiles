@@ -1,0 +1,50 @@
+source ~/.config/tig/tig-colors-neonwolf-256.tigrc
+
+# Saved by Tig
+
+## Settings
+
+set blame-options             =
+set blame-view                = date:default,local=no,format= author:full file-name:auto id:yes,color=yes line-number:no,interval=5 text
+set blob-view                 = line-number:no,interval=5 text
+set commit-order              = auto
+set diff-context              = 3
+set diff-noprefix             = no
+set diff-options              =
+set diff-view                 = line-number:no,interval=5 text
+set editor-line-number        = yes
+set file-filter               = yes
+set focus-child               = yes
+set git-colors                = no
+set grep-view                 = file-name:no line-number:yes,interval=1 text
+set horizontal-scroll         = 50%
+set id-width                  = 0
+set ignore-case               = no
+set ignore-space              = no
+set line-graphics             = utf-8
+set log-options               =
+set log-view                  = line-number:no,interval=5 text
+set mailmap                   = no
+set main-options              =
+set main-view                 = line-number:no,interval=5 id:yes,color=no date:default,local=no,format= author:full commit-title:yes,graph=v2,refs=yes,overflow=50
+set mouse                     = no
+set mouse-scroll              = 3
+set pager-view                = line-number:no,interval=5 text
+set reference-format          = [branch] {remote} <tag> ~replace~
+set refresh-interval          = 10
+set refresh-mode              = auto
+set refs-view                 = line-number:no id:no,color=no date:default,local=no,format= author:full ref commit-title:yes,graph=no,refs=no
+set show-changes              = yes
+set show-notes                = yes
+set split-view-height         = 67%
+set split-view-width          = 50%
+set stage-view                = line-number:no,interval=5 text
+set stash-view                = line-number:no,interval=5 id:no,color=no date:default,local=no,format= author:full commit-title:yes,graph=no,refs=no
+set status-show-untracked-dirs = yes
+set status-view               = line-number:no,interval=5 status:short file-name:auto
+set tab-size                  = 8
+set tree-view                 = line-number:no,interval=5 mode author:full file-size:default date:default,local=no,format= id:no,color=no file-name:auto
+set vertical-split            = auto
+set wrap-lines                = no
+set wrap-search               = yes
+bind generic 9 !sh -c "echo -n %(commit) |xsel --clipboard --input && echo Copied %(commit) to clipboard"
