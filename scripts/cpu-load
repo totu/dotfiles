@@ -1,0 +1,22 @@
+#!/bin/bash
+TMP=$(tmux-mem-cpu-load -a0 -t1 -m2 -i1 |sed 's/|/█/g' |sed 's/\[/│/' |sed 's/\]/│/')
+MEM=$(echo "$TMP" | awk -F"%" '{ print $1 }' | xargs printf "%.*f" 0)
+LOAD=$(echo "$TMP" | awk -F"%" '{ print $2 }' | awk -F"│" '{ print $2 }')
+CPU=$(echo "$TMP" | awk -F"│" '{ print $3 }' | cut -d' ' -f3 | xargs printf "%.*f" 0)
+NO_COLOR="#[fg=brightwhite]"
+CPU_AVG=$(expr $CPU / 8)
+
+
+if [ "$CPU_AVG" -lt 20 ]; then
+    COLOR="#[fg=colour2]"
+elif [ "$CPU_AVG" -lt 40 ]; then
+    COLOR="#[fg=colour190]"
+elif [ "$CPU_AVG" -lt 60 ]; then
+    COLOR="#[fg=colour11]"
+elif [ "$CPU_AVG" -lt 80 ]; then
+    COLOR="#[fg=colour208]"
+else
+    COLOR="#[fg=colour1]"
+fi
+
+echo "#[bold]$MEM% │$COLOR$LOAD$NO_COLOR"

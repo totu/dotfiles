@@ -1,0 +1,2 @@
+#!/bin/bash
+printf '\n%s-%s-%s-%s\n' "$(grep -v "[A-Z]\|'\|é" /usr/share/dict/british-english | shuf -n 4)"
