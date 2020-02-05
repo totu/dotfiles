@@ -1,0 +1,32 @@
+#!/bin/bash
+TIME=$(tmux_timer show)
+
+if [ ${#TIME} -ne 0 ]; then
+
+    HOUR=0
+    MIN=0
+    SEC=0
+
+    SEC=${TIME::-2}
+
+    if [ $SEC -gt 60 ]; then
+        MIN=$((SEC / 60))
+        SEC=$((SEC % 60))
+    fi
+
+    if [ $MIN -gt 60 ]; then
+        HOUR=$((MIN / 60))
+        MIN=$((MIN % 60))
+    fi
+
+    if [ $HOUR -gt 0 ]; then
+        echo -n "${HOUR}h "
+    fi
+
+    if [ $MIN -gt 0 ]; then
+        echo -n "${MIN}m "
+    fi
+
+    echo ${SEC}s
+
+fi
