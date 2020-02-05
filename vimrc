@@ -19,11 +19,15 @@ Plugin 'tpope/vim-commentary.git'
 Plugin 'tpope/vim-fugitive'
 Plugin 'christoomey/vim-tmux-navigator'
 Plugin 'morhetz/gruvbox'
-Plugin 'wezm/fzf.vim', { 'branch': 'rg' }
+"Plugin 'wezm/fzf.vim', { 'branch': 'rg' }
+Plugin 'junegunn/fzf.vim'
 Plugin 'neoclide/coc.nvim', {'branch': 'release'}
 Plugin 'airblade/vim-gitgutter'
 Plugin 'psliwka/vim-smoothie'
 Plugin 'mtdl9/vim-log-highlighting'
+Plugin 'martinda/Jenkinsfile-vim-syntax'
+Plugin 'vim-scripts/scons.vim'
+Plugin 'ekalinin/Dockerfile.vim.git'
 
 " end vundle stuff
 call vundle#end()            " required
@@ -32,6 +36,10 @@ filetype plugin indent on    " required
 if (has("termguicolors"))
  set termguicolors
 endif
+if has("nvim")
+  set inccommand=nosplit
+endif
+
 
 " why I suck section
 abbrev spadde spade
@@ -39,7 +47,7 @@ abbrev Commetn Comment
 abbrev Comemtn Comment
 
 " Live edit preview
-set inccommand=nosplit
+"set inccommand=nosplit
 
 " Default settings stuff
 set cot=menuone,longest,preview    " pop up completion <c-n> / <c-p>
@@ -48,6 +56,8 @@ nnoremap <F3> :!ctags -Rf .git/tags --tag-relative --extra=+f --exclude=.git .<C
 nnoremap <c-g> <c-]>
 au BufNewFile,BufRead *.rc set filetype=sh
 au BufNewFile,BufRead dump set filetype=log
+au BufNewFile,BufRead Jenkinsfile.* set filetype=Jenkinsfile
+au BufNewFile,BufRead SConscript set filetype=scons
 au BufNewFile,BufRead qc set filetype=log
 au BufNewFile,BufRead *.log.* set filetype=log
 au BufNewFile,BufRead *.rjson set filetype=json
@@ -72,7 +82,7 @@ set incsearch
 "set background=dark
 colorscheme gruvbox
 if g:colors_name == "gruvbox"
-highlight Normal ctermbg=0 guibg=0
+"highlight Normal ctermbg=0 guibg=0
 "List other overrides here
 endif
 
@@ -109,8 +119,10 @@ nnoremap <leader><space> :nohlsearch<CR>
 
 " Fuzzy find
 nnoremap <leader>F :FZF<CR>
+nnoremap <leader>T :RG<CR>
 " There used to be normal find here, but now its gone
 nnoremap <leader>f :FZF<CR>
+nnoremap <leader>t :RG<CR>
 
 " Shitty way of marking starting position and coming back from Robot definition
 let s:orig = 0
@@ -126,12 +138,52 @@ function! JumpBackToStart()
     normal 'Zzz
 endfunction
 
-" Find where robot keyword is defined
-" Ag works fine for most part
-map <F12> <esc>:Gcd<CR>:call MarkStart()<CR>gvy:Ag <C-R>"<cr>
 
-" But sometimes if fucks up with symlinks, which is why Ack is here
-map <F2> <esc>:Gcd<CR>:call MarkStart()<CR>gvy:Ack "^<C-R>""<cr>
+" git commit for syssw releases
+function! ParseCommitMessage()
+    let l:diff = system("git diff --staged --color=always|perl -wlne 'print $1 if /^\\e\\[32m\\+\\e\\[m\\e\\[32m(.*)\\e\\[m$/'|sort -u")
+    execute append(0, l:diff)
+    s/=^/: /g
+    s/[^a-zA-Z0-9:. ]/, /g
+    norm $xx0
+    norm dtk
+endfunction
+
+function! OpenChangelog()
+    let l:diff = system("git diff --staged --color=always|perl -wlne 'print $1 if /^\\e\\[32m\\+\\e\\[m\\e\\[32m(.*)\\e\\[m$/'|sort -u")
+    execute append(0, l:diff)
+    s/=^/: /g
+    s/[^a-zA-Z0-9:. ]/, /g
+    norm $xx0
+    norm dtk
+
+    norm "pyt:f:ll"nyt,
+    let l:s=@p
+    execute 'edit ../' . l:s . '/CHANGE_LOG'
+    execute '/^K'
+    norm y}
+    bd
+    norm p
+    norm O
+    norm ggf,2l
+
+    norm "pyt:f:ll"nyt,
+    let l:s=@p
+    execute 'edit ../' . l:s . '/CHANGE_LOG'
+    execute '/^K'
+    norm y}
+    bd
+    norm p
+    norm O
+endfunction
+
+map <leader>cm <esc>:call ParseCommitMessage()<cr>
+map <leader>cl <esc>:call OpenChangelog()<cr>
+
+" find usages
+map <F2> <esc>:Gcd<CR>:call MarkStart()<CR>gvy:RG <C-R>"<cr>
+" find definition
+map <F12> <esc>:Gcd<CR>:call MarkStart()<CR>gvy:RG ^<C-R>"<cr>
 
 " Back to where first search took place
 map <leader>q :call JumpBackToStart()<CR>
@@ -188,22 +240,15 @@ let g:ale_echo_msg_format = '[%linter%] %s [%severity%]'
 " config for the commenter plugin
 autocmd FileType robot setlocal commentstring=#\ %s
 
-" rg ''hack''
-" no idea if this even does anything anymore
-" I've also hacked stuff inside the FZF bundle
-if executable('rg')
-    " Use ag over grep
-    let g:ackprg = 'rg -f --vimgrep --no-heading --ignore-case 2>/dev/null'
-    set grepprg=rg\ -f\ --vimgrep\ --no-heading\ --ignore-case\ 2>/dev/null
-    set grepformat=%f:%l:%c:%m,%f:%l:%m
+function! RipgrepFzf(query, fullscreen)
+  let command_fmt = 'rg --follow --column --line-number --no-heading --color=always --smart-case %s || true'
+  let initial_command = printf(command_fmt, shellescape(a:query))
+  let reload_command = printf(command_fmt, '{q}')
+  let spec = {'options': ['--phony', '--query', a:query, '--bind', 'change:reload:'.reload_command]}
+  call fzf#vim#grep(initial_command, 1, fzf#vim#with_preview(spec), a:fullscreen)
+endfunction
 
-    command! -bang -nargs=* Rg
-      \ call fzf#vim#grep(
-      \   'rg -f --column --line-number --no-heading --color=always --ignore-case '.shellescape(<q-args>), 1,
-      \   <bang>0 ? fzf#vim#with_preview('up:60%')
-      \           : fzf#vim#with_preview('right:50%:hidden', '?'),
-      \   <bang>0)
-endif
+command! -nargs=* -bang RG call RipgrepFzf(<q-args>, <bang>0)
 
 " Execute a command while preserving cursor position and history.
 function! Preserve(command)
@@ -221,11 +266,49 @@ nnoremap <Leader>= :call Preserve("normal gg=G")<CR>zz
 " Try to stay 5 rows away from borders
 set scrolloff=5
 
+" paste shit in ~/.reg.vim file
+vmap <silent> ,y y:new<CR>:call setline(1,getregtype())<CR>o<Esc>P:wq! ~/.reg.vim<CR>
+nmap <silent> ,y :new<CR>:call setline(1,getregtype())<CR>o<Esc>P:wq! ~/.reg.vim<CR>
+map <silent> ,p :sview ~/.reg.vim<CR>"zdddG:q!<CR>:call setreg('"', @", @z)<CR>p
+map <silent> ,P :sview ~/.reg.vim<CR>"zdddG:q!<CR>:call setreg('"', @", @z)<CR>P
+
 " :Q
 command! Q :qa!
+
+" Fancy fzf popup window stuff
+autocmd! FileType fzf
+autocmd  FileType fzf set noshowmode noruler nonu
+
+if has('nvim') && exists('&winblend') && &termguicolors
+  set winblend=20
+
+  hi NormalFloat guibg=None
+  if exists('g:fzf_colors.bg')
+    call remove(g:fzf_colors, 'bg')
+  endif
+
+  if stridx($FZF_DEFAULT_OPTS, '--border') == -1
+    let $FZF_DEFAULT_OPTS .= ' --border'
+  endif
+
+  function! FloatingFZF()
+    let width = float2nr(&columns * 0.8)
+    let height = float2nr(&lines * 0.6)
+    let opts = { 'relative': 'editor',
+               \ 'row': (&lines - height) / 2,
+               \ 'col': (&columns - width) / 2,
+               \ 'width': width,
+               \ 'height': height }
+
+    call nvim_open_win(nvim_create_buf(v:false, v:true), v:true, opts)
+  endfunction
+
+  let g:fzf_layout = { 'window': 'call FloatingFZF()' }
+endif
 
 " Bughunting and ops stuff, once you’ve gotten the hang of things. The only “new” info you ever learn about a
 " production system is that it is broken or, even worse, that it is somehow managing to deliver value despite
 " having the software equivalent of hyperdimensional aggressive bone cancer. Instead of merely not affording
 " chances to learn or explore, this work actively punishes you for digging into the abyss.
+
 
