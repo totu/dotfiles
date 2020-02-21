@@ -1,4 +1,11 @@
 " trial stuff
+" Why is fzf preview grep so god damn slow :(
+let g:fzf_preview_filelist_command = 'rg --files --hidden --follow --no-messages -g \!"* *"'
+let g:fzf_preview_grep_cmd = 'rg --line-number --no-heading'
+nnoremap <leader>b :FzfPreviewBuffers<cr>
+
+let g:floaterm_position = 'center'
+let g:floaterm_keymap_toggle = '<F1>'
 tnoremap <Esc> <C-\><C-n>
 
 "required Vundle stuff
@@ -11,7 +18,7 @@ Plugin 'VundleVim/Vundle.vim'
 Plugin 'ntpeters/vim-better-whitespace'
 Plugin 'mileszs/ack.vim'
 Plugin 'w0rp/ale'
-Plugin 'jeetsukumaran/vim-buffergator'
+"Plugin 'jeetsukumaran/vim-buffergator'
 Plugin 'tpope/vim-commentary.git'
 Plugin 'tpope/vim-fugitive'
 Plugin 'christoomey/vim-tmux-navigator'
@@ -25,27 +32,25 @@ Plugin 'martinda/Jenkinsfile-vim-syntax'
 Plugin 'vim-scripts/scons.vim'
 Plugin 'ekalinin/Dockerfile.vim.git'
 Plugin 'yuki-ycino/fzf-preview.vim'
-Plugin 'ryanoasis/vim-devicons'
+Plugin 'voldikss/vim-floaterm'
 
 " end vundle stuff
 call vundle#end()            " required
 filetype plugin indent on    " required
 
 if (has("termguicolors"))
- set termguicolors
-endif
-if has("nvim")
-  set inccommand=nosplit
+    set termguicolors
 endif
 
+if has("nvim")
+" Live edit preview
+    set inccommand=nosplit
+endif
 
 " why I suck section
 abbrev spadde spade
 abbrev Commetn Comment
 abbrev Comemtn Comment
-
-" Live edit preview
-"set inccommand=nosplit
 
 " Default settings stuff
 set cot=menuone,longest,preview    " pop up completion <c-n> / <c-p>
@@ -81,6 +86,7 @@ colorscheme gruvbox
 
 " yank filename
 noremap <c-s> :let @"=expand("%:p")<cr>
+" paste yanked file name as a new resource
 noremap <c-d> :norm oResource<cr>:norm 10a <cr>pBd5f/<cr>
 
 " vim-tmux-navigator config
@@ -111,10 +117,9 @@ vnoremap # y/<C-R>"<CR>
 nnoremap <leader><space> :nohlsearch<CR>
 
 " Fuzzy find
-nnoremap <leader>F :FzfPreviewProjectFiles<CR>
+nnoremap <leader>F :FzfPreviewDirectoryFiles<CR>
 " There used to be normal find here, but now its gone
 nnoremap <leader>f :FzfPreviewProjectFiles<CR>
-
 " find usages
 map <F2> <esc>:Gcd<CR>:call MarkStart()<CR>gvy:RG <C-R>"<cr>
 " find definition (works only for robot kws)
@@ -197,11 +202,11 @@ autocmd FileType robot setlocal commentstring=#\ %s
 
 " Best searching functions found thus far
 function! RipgrepFzf(query, fullscreen)
-  let command_fmt = 'rg --ignore-case --follow --column --line-number --no-heading --color=always %s || true'
-  let initial_command = printf(command_fmt, shellescape(a:query))
-  let reload_command = printf(command_fmt, '{q}')
-  let spec = {'options': ['--phony', '--query', a:query, '--bind', 'change:reload:'.reload_command]}
-  call fzf#vim#grep(initial_command, 1, fzf#vim#with_preview(spec), a:fullscreen)
+    let command_fmt = 'rg --ignore-case --follow --column --line-number --no-heading --color=always %s || true'
+    let initial_command = printf(command_fmt, shellescape(a:query))
+    let reload_command = printf(command_fmt, '{q}')
+    let spec = {'options': ['--phony', '--query', a:query, '--bind', 'change:reload:'.reload_command]}
+    call fzf#vim#grep(initial_command, 1, fzf#vim#with_preview(spec), a:fullscreen)
 endfunction
 
 " Map previous function to :RG
@@ -237,51 +242,50 @@ autocmd! FileType fzf
 autocmd  FileType fzf set noshowmode noruler nonu
 
 if has('nvim') && exists('&winblend') && &termguicolors
-  set winblend=20
+    set winblend=20
 
-  hi NormalFloat guibg=None
-  if exists('g:fzf_colors.bg')
-    call remove(g:fzf_colors, 'bg')
-  endif
+    hi NormalFloat guibg=None
+    if exists('g:fzf_colors.bg')
+        call remove(g:fzf_colors, 'bg')
+    endif
 
-  if stridx($FZF_DEFAULT_OPTS, '--border') == -1
-    let $FZF_DEFAULT_OPTS .= ' --border'
-  endif
+    if stridx($FZF_DEFAULT_OPTS, '--border') == -1
+        let $FZF_DEFAULT_OPTS .= ' --border'
+    endif
 
-  " This is straigh up copy-and-paste from FzfPreview plugin.
-  " It looks nice, but my search is 100x faster
-  function! FloatingFZF()
-    let width = min([&columns - 4, max([80, &columns - 20])])
-    let height = min([&lines - 4, max([20, &lines - 10])])
-    let top = ((&lines - height) / 2) - 1
-    let left = (&columns - width) / 2
-    let opts = {'relative': 'editor', 'row': top, 'col': left, 'width': width, 'height': height, 'style': 'minimal'}
+    " This is straigh up copy-and-paste from FzfPreview plugin.
+    " It looks nice, but my search is 100x faster
+    function! FloatingFZF()
+        let width = min([&columns - 4, max([80, &columns - 20])])
+        let height = min([&lines - 4, max([20, &lines - 10])])
+        let top = ((&lines - height) / 2) - 1
+        let left = (&columns - width) / 2
+        let opts = {'relative': 'editor', 'row': top, 'col': left, 'width': width, 'height': height, 'style': 'minimal'}
 
-    let top = '╭' . repeat('─', width - 2) . '╮'
-    let mid = '│' . repeat(' ', width - 2) . '│'
-    let bot = '╰' . repeat('─', width - 2) . '╯'
-    let lines = [top] + repeat([mid], height - 2) + [bot]
-    let s:b_buf = nvim_create_buf(v:false, v:true)
-    call nvim_buf_set_lines(s:b_buf, 0, -1, v:true, lines)
-    call nvim_open_win(s:b_buf, v:true, opts)
-    set winhl=Normal:Floating
-    let opts.row += 1
-    let opts.height -= 2
-    let opts.col += 2
-    let opts.width -= 4
-    let s:f_buf = nvim_create_buf(v:false, v:true)
-    call nvim_open_win(s:f_buf, v:true, opts)
-    setlocal nocursorcolumn
-    augroup fzf_preview_floating_window
-      autocmd WinLeave <buffer> silent! execute 'bwipeout! ' . s:f_buf . ' ' . s:b_buf
-    augroup END
-  endfunction
+        let top = '╭' . repeat('─', width - 2) . '╮'
+        let mid = '│' . repeat(' ', width - 2) . '│'
+        let bot = '╰' . repeat('─', width - 2) . '╯'
+        let lines = [top] + repeat([mid], height - 2) + [bot]
+        let s:b_buf = nvim_create_buf(v:false, v:true)
+        call nvim_buf_set_lines(s:b_buf, 0, -1, v:true, lines)
+        call nvim_open_win(s:b_buf, v:true, opts)
+        set winhl=Normal:Floating
+        let opts.row += 1
+        let opts.height -= 2
+        let opts.col += 2
+        let opts.width -= 4
+        let s:f_buf = nvim_create_buf(v:false, v:true)
+        call nvim_open_win(s:f_buf, v:true, opts)
+        setlocal nocursorcolumn
+        augroup fzf_preview_floating_window
+            autocmd WinLeave <buffer> silent! execute 'bwipeout! ' . s:f_buf . ' ' . s:b_buf
+        augroup END
+    endfunction
 
-  let g:fzf_layout = { 'window': 'call FloatingFZF()' }
+    let g:fzf_layout = { 'window': 'call FloatingFZF()' }
 endif
 
 " Bughunting and ops stuff, once you’ve gotten the hang of things. The only “new” info you ever learn about a
 " production system is that it is broken or, even worse, that it is somehow managing to deliver value despite
 " having the software equivalent of hyperdimensional aggressive bone cancer. Instead of merely not affording
 " chances to learn or explore, this work actively punishes you for digging into the abyss.
-
