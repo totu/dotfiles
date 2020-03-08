@@ -1,24 +1,14 @@
-" trial stuff
-" Why is fzf preview grep so god damn slow :(
-let g:fzf_preview_filelist_command = 'rg --files --hidden --follow --no-messages -g \!"* *"'
-let g:fzf_preview_grep_cmd = 'rg --line-number --no-heading'
-nnoremap <leader>b :FzfPreviewBuffers<cr>
-
-let g:floaterm_position = 'center'
-let g:floaterm_keymap_toggle = '<F1>'
-tnoremap <Esc> <C-\><C-n>
-
-"required Vundle stuff
+" Required Vundle stuff
 set nocompatible
 filetype off
 set rtp+=~/.vim/bundle/Vundle.vim
 call vundle#begin()
 Plugin 'VundleVim/Vundle.vim'
-" insert plugins
+
+" Plugins:
 Plugin 'ntpeters/vim-better-whitespace'
 Plugin 'mileszs/ack.vim'
 Plugin 'w0rp/ale'
-"Plugin 'jeetsukumaran/vim-buffergator'
 Plugin 'tpope/vim-commentary.git'
 Plugin 'tpope/vim-fugitive'
 Plugin 'christoomey/vim-tmux-navigator'
@@ -34,25 +24,31 @@ Plugin 'ekalinin/Dockerfile.vim.git'
 Plugin 'yuki-ycino/fzf-preview.vim'
 Plugin 'voldikss/vim-floaterm'
 
-" end vundle stuff
+" End of Vundle stuff
 call vundle#end()            " required
 filetype plugin indent on    " required
 
+" Trial stuff
+nnoremap <leader>b :FzfPreviewBuffers<cr>
+let g:floaterm_position = 'center'
+let g:floaterm_keymap_toggle = '<F1>'
+tnoremap <Esc> <C-\><C-n>
+
+" Why I suck section
+abbrev spadde spade
+abbrev Commetn Comment
+abbrev Comemtn Comment
+
+" Neovim settings
 if (has("termguicolors"))
     set termguicolors
 endif
 
 if has("nvim")
-" Live edit preview
-    set inccommand=nosplit
+    set inccommand=nosplit    " Live edit preview
 endif
 
-" why I suck section
-abbrev spadde spade
-abbrev Commetn Comment
-abbrev Comemtn Comment
-
-" Default settings stuff
+" Basic settings
 set cot=menuone,longest,preview    " pop up completion <c-n> / <c-p>
 set tags+=.git/tags
 nnoremap <F3> :!ctags -Rf .git/tags --tag-relative --extra=+f --exclude=.git .<CR><CR>
@@ -96,8 +92,7 @@ map <c-h> :TmuxNavigateLeft<cr>
 map <c-k> :TmuxNavigateUp<cr>
 map <c-j> :TmuxNavigateDown<cr>
 
-" Set <leader> to space instead of ,
-" maybe should be <space>?, but work for now
+" Set <leader> to space instead of maybe should be <space>?, but work for now
 let mapleader=" "
 
 " Write readonly as root
@@ -110,19 +105,19 @@ set wildmode=longest,list
 set wildignore+=*.pyc,*.pcapng
 set rtp+=~/.fzf
 
-" find for visual selection
+" Find for visual selection
 vnoremap # y/<C-R>"<CR>
 
-" double space to remove hilighting
+" Double space to remove hilighting
 nnoremap <leader><space> :nohlsearch<CR>
 
 " Fuzzy find
 nnoremap <leader>F :FzfPreviewDirectoryFiles<CR>
-" There used to be normal find here, but now its gone
 nnoremap <leader>f :FzfPreviewProjectFiles<CR>
-" find usages
+
+" Hacked find usages
 map <F2> <esc>:Gcd<CR>:call MarkStart()<CR>gvy:RG <C-R>"<cr>
-" find definition (works only for robot kws)
+" Hacked find definition (works only for robot kws)
 map <F12> <esc>:Gcd<CR>:call MarkStart()<CR>gvy:RG ^<C-R>"<cr>
 
 " Shitty way of marking starting position and coming back from Robot definition
@@ -139,65 +134,67 @@ function! JumpBackToStart()
     normal 'Zzz
 endfunction
 
-" Back to where first search took place
 map <leader>q :call JumpBackToStart()<CR>
 
 " Copy current line to clip-board
 nnoremap <C-Y> 0m70v$h"*y`7:delmarks 7<CR>
 
-" Make copen menu act like a proper functional member
-" of society and close after it is used
+" Make copen menu act like a proper functional member of society and close after it is used
 autocmd FileType qf nnoremap <buffer> <CR> <CR>:cclose<CR>
 autocmd FileType qf nnoremap <buffer> <Esc> :cclose<CR>
 
-" buffers
+" Handle buffers
 map <Leader>a :bprev<Return>
 map <Leader>s :bnext<Return>
 map <Leader>d :bd<Return>
 nmap <tab> :b#<CR>
-" clean critical_red.txt
+
+" Clean RF junk from critical_red.txt
 nnoremap <leader>x :%!grep \\-\\-test<CR>:w<CR>:%!sort %<CR>:w<CR>
-" open robot logs
+
+" Open stdout from robot run
 nnoremap <leader>l :e tests/results/stdout.log<CR>
-" run json lint from python on file
+
+" Run json lint from python on file
 nnoremap <leader>j :%!python -m json.tool<CR>
-" run robot tidy on file
+" Run robot tidy on file
 nnoremap <leader>r :%!python -m robot.tidy %:p<CR>
-" run python black on file
+" Run python black on file
 nnoremap <c-p> :!black %<cr><cr>
 
-" row numbering switching shit
+" Actually good row numbering
 set relativenumber number
 autocmd InsertEnter * :set norelativenumber number
 autocmd InsertLeave * :set relativenumber  number
 
-" remove trailing whitespace on save
+" Remove trailing whitespace on save
 autocmd BufWritePre * call Preserve("%s/\\s\\+$//e")
 
-" make ctrl+space insert 4 spaces
+" Make ctrl+space insert 4 spaces
 inoremap <C-Space> <Space><Space><Space><Space>
-" in terminal sometimes ctrl+space isn't ctrl+space,
-" but instead nul or ctrl-@ for some reason
-inoremap <Nul> <Space><Space><Space><Space>
+" ...in some terminals ctrl+space isn't ctrl+space
 inoremap <C-@> <Space><Space><Space><Space>
+" ...but instead nul and/or ctrl-@ are for some reason
+inoremap <Nul> <Space><Space><Space><Space>
 
-" reload current file
+" Reload current file
 nnoremap <leader><S-r> :e! %<CR>
 nnoremap <leader>e :enew<CR>
-" show git blame (fugitive)
+" Show git blame (fugitive)
 nnoremap <F10> :Gblame<CR>
-" toggle fugitive marks (when large changes these lag)
+" Toggle fugitive marks (when large changes these lag)
 nnoremap <F9> :GitGutterSignsToggle<CR>
+" Autoload git gutter
 autocmd BufWritePost * GitGutter
 
-" more useful from ALE, also only when asked (or after save)
+" More useful ALE errors, also only when asked (or after save)
 let g:ale_lint_on_enter = 1
 let g:ale_python_flake8_executable = 'python3'
 let g:ale_echo_msg_error_str = 'E'
 let g:ale_echo_msg_warning_str = 'W'
 let g:ale_echo_msg_format = '[%linter%] %s [%severity%]'
 
-" config for the commenter plugin
+" Config for the commenter plugin
 autocmd FileType robot setlocal commentstring=#\ %s
 
 " Best searching functions found thus far
@@ -228,7 +225,7 @@ nnoremap <Leader>= :call Preserve("normal gg=G")<CR>zz
 " Try to stay 5 rows away from borders
 set scrolloff=5
 
-" paste shit in ~/.reg.vim file
+" Paste shit in ~/.reg.vim file
 vmap <silent> ,y y:new<CR>:call setline(1,getregtype())<CR>o<Esc>P:wq! ~/.reg.vim<CR>
 nmap <silent> ,y :new<CR>:call setline(1,getregtype())<CR>o<Esc>P:wq! ~/.reg.vim<CR>
 map <silent> ,p :sview ~/.reg.vim<CR>"zdddG:q!<CR>:call setreg('"', @", @z)<CR>p
@@ -253,9 +250,7 @@ if has('nvim') && exists('&winblend') && &termguicolors
         let $FZF_DEFAULT_OPTS .= ' --border'
     endif
 
-    " This is straigh up copy-and-paste from FzfPreview plugin.
-    " It looks nice, but my search is 100x faster
-    function! FloatingFZF()
+    function! FloatingFZF()    " This is straigh up copy-and-paste from FzfPreview plugin. It looks nice, but my search is 100x faster
         let width = min([&columns - 4, max([80, &columns - 20])])
         let height = min([&lines - 4, max([20, &lines - 10])])
         let top = ((&lines - height) / 2) - 1
@@ -285,7 +280,4 @@ if has('nvim') && exists('&winblend') && &termguicolors
     let g:fzf_layout = { 'window': 'call FloatingFZF()' }
 endif
 
-" Bughunting and ops stuff, once you’ve gotten the hang of things. The only “new” info you ever learn about a
-" production system is that it is broken or, even worse, that it is somehow managing to deliver value despite
-" having the software equivalent of hyperdimensional aggressive bone cancer. Instead of merely not affording
-" chances to learn or explore, this work actively punishes you for digging into the abyss.
+" Bughunting and ops stuff, once you’ve gotten the hang of things. The only “new” info you ever learn about a production system is that it is broken or, even worse, that it is somehow managing to deliver value despite having the software equivalent of hyperdimensional aggressive bone cancer. Instead of merely not affording chances to learn or explore, this work actively punishes you for digging into the abyss.
