@@ -48,11 +48,14 @@ if has("nvim")
     set inccommand=nosplit    " Live edit preview
 endif
 
-" Basic settings
-set cot=menuone,longest,preview    " pop up completion <c-n> / <c-p>
+" Run excuberant-ctags on the repo
 set tags+=.git/tags
 nnoremap <F3> :!ctags -Rf .git/tags --tag-relative --extra=+f --exclude=.git .<CR><CR>
+
+" Custom jump to tag since C-] is impossible with Nordic keyboard
 nnoremap <c-g> <c-]>
+
+" Set correct filetypes when opening files
 au BufNewFile,BufRead *.rc set filetype=sh
 au BufNewFile,BufRead dump set filetype=log
 au BufNewFile,BufRead Jenkinsfile.* set filetype=Jenkinsfile
@@ -60,6 +63,9 @@ au BufNewFile,BufRead SConscript set filetype=scons
 au BufNewFile,BufRead qc set filetype=log
 au BufNewFile,BufRead *.log.* set filetype=log
 au BufNewFile,BufRead *.rjson set filetype=json
+
+" Basic settings
+set cot=menuone,longest,preview    " pop up completion <c-n> / <c-p>
 set t_Co=256
 set virtualedit=block
 set splitbelow splitright
@@ -78,11 +84,13 @@ set autoindent
 set expandtab
 set showmatch
 set incsearch
+
+" Colors are hard
 colorscheme gruvbox
 
-" yank filename
+" Yank filename
 noremap <c-s> :let @"=expand("%:p")<cr>
-" paste yanked file name as a new resource
+" Paste yanked file name as a new resource
 noremap <c-d> :norm oResource<cr>:norm 10a <cr>pBd5f/<cr>
 
 " vim-tmux-navigator config
