@@ -5,4 +5,4 @@ FILE="$HOME/.cache/corona"
 [[ $(stat -t '%y-%m-%d' $FILE 2>/dev/null | cut -d' ' -f10 | sed 's/"//g') != $(date -u +"%y-%m-%d") ]] &&
     curl -s $URL > $FILE
 
-corona_parser.py $FILE
+corona_parser.py $FILE $1
