@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang='en'>
+    <head>
+        <meta charset='utf-8'>
+        <title>MLINK - demo 2</title>
+        <link rel='stylesheet' href='assets/styles.css?v=1.0'>
+    </head>
+    <body>
+        <div id="pop"><h1>Payload can not be empty!</h1></div>
+        <div id='top'>
+            <a href='index.html'><img id='logo' src='assets/logo.svg' /></a>
+            <span id='connection-status'></span>
+        </div>
+        <div id='mid'>
+            <div id='right'>
+                <div id='receive'></div>
+            </div>
+            <div id='left'>
+                <input type='checkbox' id='pro' />
+                <label id='pro-label' for='pro'>PRO:</label>
+                <select id='command'>
+                    <option value='custom'>Custom</option>
+                    <option value='ping'>Ping</option>
+                    <option value='call'>Call</option>
+                </select>
+                <label id='command-label' for='command'>Command:</label>
+                <h1>Topic</h1>
+                <input class='' type='text' id='topic' />
+                <h1 id='title'>Payload</h1>
+                <div id='payload'>
+                    <textarea id='custom-payload' rows=10></textarea>
+                </div>
+                <button type='button' id='send'>Send</button>
+            </div>
+        </div>
+        <script src='assets/demo2.js'></script>
+    </body>
+</html>

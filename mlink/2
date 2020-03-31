@@ -42,6 +42,7 @@ html, body {
 }
 
 label, h1, button {
+    font-size: 20px;
     font-family: VCR;
     text-transform: uppercase;
     margin: 5px 14px 5px 14px;
@@ -54,7 +55,20 @@ label {
     color: #ddd;
 }
 
-#payload {
+#command, #command-label {
+    font-size: 15px;
+    margin-right: 10px;
+    float: right;
+    color: #000;
+}
+
+#command-label {
+    position: relative;
+    margin: 0;
+    top: 1px;
+}
+
+#custom-payload{
     display: block;
     width: 90%;
     border: 1px solid #cbcbcb;
@@ -91,4 +105,54 @@ label {
 .msg:last-child {
     padding-bottom: 0;
     border-bottom: none !important;
+}
+
+.demo-link {
+    font-family: VCR;
+    font-size: 40px;
+    display: block;
+    text-transform: uppercase;
+    text-decoration: none;
+    margin: auto;
+    padding: 40px;
+    text-align: center;
+    color: #000;
+}
+
+.demo-link:hover {
+      background: -webkit-linear-gradient(#4fa8ff, #006678);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+}
+
+#topic {
+    font-size: 16px;
+    font-family: monospace;
+    display: block;
+    width: calc(100% - 20px);
+    border: 1px solid #cbcbcb;
+    border-radius: 5px;
+    padding: 5px;
+    margin: 0 5px;
+    box-sizing: border-box;
+}
+
+.payload-label {
+    display: inline-block;
+    width: 45% !important;
+    color: #000;
+    margin-top: 5px;
+    padding-left: 15px;
+    font-size: 16px;
+}
+
+.payload-input {
+    width: 45%;
+    font-size: 16px;
+    font-family: monospace;
+    display: inline-block;
+    border: 1px solid #cbcbcb;
+    border-radius: 5px;
+    padding: 5px;
+    margin-top: 5px;
 }
