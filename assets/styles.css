@@ -1,0 +1,94 @@
+/* logo colors:
+ * #4fa8ff
+ * #006678
+ */
+@font-face {
+    font-family: VCR;
+    src: url(VCR_OSD_MONO_1.001.ttf);
+}
+
+html, body {
+    background: #fcfcfc;
+    color: #000;
+    padding: 0;
+    margin: 0;
+}
+
+#top {
+    vertical-align: top;
+    height: 60px;
+    background-color: #cbcbcb;
+}
+
+#connection-status {
+    float: right;
+    font-family: VCR;
+    padding-top: 18px;
+    padding-right: 18px;
+    cursor: default;
+}
+
+#logo {
+    width: 200px;
+    position: absolute;
+    left: -16px;
+    top: -70px;
+    clip: rect(0, 200px, 120px, 0);
+}
+
+#left, #right {
+    width: 50%;
+    height: 100%;
+}
+
+label, h1, button {
+    font-family: VCR;
+    text-transform: uppercase;
+    margin: 5px 14px 5px 14px;
+}
+
+label {
+    margin: 0;
+    padding: 0;
+    font-size: 10px;
+    color: #ddd;
+}
+
+#payload {
+    display: block;
+    width: 90%;
+    border: 1px solid #cbcbcb;
+    border-radius: 5px;
+    padding: 5px;
+    margin: auto;
+}
+
+#send {
+    float: right;
+    font-size: 20px;
+    padding: 5px;
+    border-radius: 5px;
+}
+
+#right {
+    float: right;
+    border-left: 1px solid #ddd;
+}
+
+#receive {
+    color: #666;
+    margin: 15px 15px;
+    overflow: scroll;
+}
+
+.msg {
+    margin: 0;
+    padding: 0;
+    padding-bottom: 15px;
+    border-bottom: 1px dashed #ddd;
+}
+
+.msg:last-child {
+    padding-bottom: 0;
+    border-bottom: none !important;
+}
