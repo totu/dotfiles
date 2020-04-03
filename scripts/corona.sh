@@ -1,5 +1,5 @@
 #!/bin/bash
-URL="https://w3qa5ydb4l.execute-api.eu-west-1.amazonaws.com/prod/finnishCoronaData"
+URL="https://w3qa5ydb4l.execute-api.eu-west-1.amazonaws.com/prod/finnishCoronaData/v2"
 FILE="$HOME/.cache/corona"
 
 if [[ $(uname -s) = "Linux" ]]; then
