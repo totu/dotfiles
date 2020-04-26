@@ -209,13 +209,13 @@ __git_ps1_show_upstream ()
 		"0	0") # equal to upstream
 			p="" ;;
 		"0	"*) # ahead of upstream
-            p=" (\e[32m+${count#0	}\e[38;5;255m)" ;;
+            p=$' (\e[32m+'${count#0	}$'\e[38;5;255m)' ;;
 		*"	0") # behind upstream
-            p=" (\e[31m-${count%	0}\e[38;5;255m)" ;;
+            p=$' (\e[31m-'${count%	0}$'\e[38;5;255m)' ;;
 		*)	    # diverged from upstream
             PLUS_SIDE=$(echo ${count%0 } | awk '{split($0,a," "); print a[2]}')
             MINUS_SIDE=$(echo ${count%0 } | awk '{split($0,a," "); print a[1]}')
-            p=" (\e[32m+${PLUS_SIDE}\e[38;5;255m|\e[31m-${MINUS_SIDE}\e[38;5;255m)" ;;
+            p=$' (\e[32m+'${PLUS_SIDE}$'\e[38;5;255m|\e[31m-'${MINUS_SIDE}$'\e[38;5;255m)';;
 		esac
 		if [[ -n "$count" && -n "$name" ]]; then
 			__git_ps1_upstream_name=$(git rev-parse \
@@ -246,13 +246,13 @@ __git_ps1_colorize_gitstring ()
 	else
 		# Using \[ and \] around colors is necessary to prevent
 		# issues with command line editing/browsing/completion!
-		local c_red='\[\e[31m\]'
-		local c_green='\[\e[32m\]'
-		local c_lblue='\[\e[1;34m\]'
-		local c_clear='\[\e[0m\]'
+		local c_red=$'\[\e[31m\]'
+		local c_green=$'\[\e[32m\]'
+		local c_lblue=$'\[\e[1;34m\]'
+		local c_clear=$'\[\e[0m\]'
 	fi
 	local bad_color=$c_red
-	local ok_color='\[\e[38;5;214m\]'
+	local ok_color=$'\[\e[38;5;214m\]'
 	#local ok_color='\[\e[38;5;45m\]'
 	#local ok_color='\[\e[38;5;24m\]'
 	local flags_color="$c_lblue"
@@ -480,8 +480,8 @@ __git_ps1 ()
 		if [ -n "${GIT_PS1_SHOWDIRTYSTATE-}" ] &&
 		   [ "$(git config --bool bash.showDirtyState)" != "false" ]
 		then
-			git diff --no-ext-diff --quiet || w="\\e[91m✘\\e[0m"
-			git diff --no-ext-diff --cached --quiet || i="\\e[92m✔\\e[0m"
+			git diff --no-ext-diff --quiet || w=$'\e[91m✘\e[0m'
+			git diff --no-ext-diff --cached --quiet || i=$'e[92m✔\\e[0m'
 			if [ -z "$short_sha" ] && [ -z "$i" ]; then
 				i="#"
 			fi
@@ -517,7 +517,7 @@ __git_ps1 ()
 		b="\${__git_ps1_branch_name}"
 	fi
 
-    b="\\e[38;5;215m$b\\e[0m"
+    b=$'\e[38;5;215m'$b$'\e[0m'
 	local f="$w$i$s$u"
 	local gitstring="$c$b${f:+$z$f}$r$p"
 
