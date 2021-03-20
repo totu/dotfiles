@@ -481,7 +481,7 @@ __git_ps1 ()
 		   [ "$(git config --bool bash.showDirtyState)" != "false" ]
 		then
 			git diff --no-ext-diff --quiet || w=$'\e[91m✘\e[0m'
-			git diff --no-ext-diff --cached --quiet || i=$'e[92m✔\\e[0m'
+			git diff --no-ext-diff --cached --quiet || i=$'\e[92m✔\\e[0m'
 			if [ -z "$short_sha" ] && [ -z "$i" ]; then
 				i="#"
 			fi

@@ -11,7 +11,7 @@ METADATA = SPOTIFY_PROPERTIES.Get("org.mpris.MediaPlayer2.Player", "Metadata")
 STATUS = SPOTIFY_PROPERTIES.Get("org.mpris.MediaPlayer2.Player", "PlaybackStatus")
 
 # Just in case we want to also show status when not playing
-PRINT_STATUS = "⏸" if STATUS == "Paused" else "▶"
+PRINT_STATUS = "⏸" if STATUS == "Paused" else "♬"
 
 if STATUS != "Paused":
     PRINT_STRING = "%s - %s" % (METADATA["xesam:artist"][0], METADATA["xesam:title"])

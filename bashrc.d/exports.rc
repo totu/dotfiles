@@ -1,19 +1,4 @@
 #!/usr/bin/env bash
 # Exports
-export GOPATH=$HOME/.go
-export BROWSER=w3m
-export BAT_THEME="zenburn"
 export LC_ALL="en_US.UTF-8"
 export EDITOR=nvim
-export http_proxy=""
-export HTTP_PROXY=""
-
-#export LOCALSLOTS=8
-#export DISTCC_NUM_THREADS=24
-#export SCONSFLAGS="--ln --m64 --clang"
-
-# this was some SSH stuff
-#export DISPLAY=localhost:10.0
-# this fixes issues after putty connections
-#export DISPLAY=:1.0
-

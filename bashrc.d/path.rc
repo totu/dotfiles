@@ -1,8 +1,4 @@
 #!/usr/bin/env bash
 # Path stuff
-# [[ ":$PATH:" != *"${HOME}/.scripts/"* ]] && PATH="${HOME}/.scripts/:${PATH}"
-# [[ ":$PATH:" != *"${HOME}/.scripts/bin"* ]] && PATH="${HOME}/.scripts/bin:${PATH}"
-# [[ ":$PATH:" != *"${HOME}/.wireshark/"* ]] && PATH="${HOME}/.wireshark/:${PATH}"
-# [[ ":$PATH:" != *"${HOME}/.cargo/bin/"* ]] && PATH="${HOME}/.cargo/bin/:${PATH}"
-# [[ ":$PATH:" != *"${GOPATH}/bin/"* ]] && PATH="${GOPATH}/bin/:${PATH}"
+[[ ":$PATH:" != *"${HOME}/.bin/"* ]] && PATH="${HOME}/.bin/:${PATH}"
 
